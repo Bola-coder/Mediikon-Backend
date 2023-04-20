@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const AppError = require("./utils/AppError");
 const ErrorMiddleware = require("./middlewares/Error");
 const authRouter = require("./routes/auth");
+const jobRouter = require("./routes/job");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Routes
 app.use("/auth", authRouter);
+app.use("/jobs", jobRouter);
 
 // Error Handling
 app.all("*", (req, res, next) => {
