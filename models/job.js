@@ -22,7 +22,7 @@ const jobSchema = mongoose.Schema({
     type: [String],
     required: [true, "A job should have requirements"],
   },
-  applicationEndDate: {
+  applicationDeadline: {
     type: Date,
   },
   salary: {

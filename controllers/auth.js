@@ -15,8 +15,8 @@ const signJWT = (id, role) => {
 
 // Signup fucntion for users
 const signup = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
-  const user = await User.create({ name, email, password });
+  const { name, email, password, role } = req.body;
+  const user = await User.create({ name, email, password, role });
   if (!user) {
     return next(new AppError("Failed to create new user", 400));
   }
