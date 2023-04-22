@@ -1,10 +1,13 @@
-const Jobs = require("./../models/job");
+// const Jobs = require("./../models/job");
+const JobService = require("./../services/job.service");
 const catchAsync = require("./../utils/CatchAsync");
 const AppError = require("./../utils/AppError");
 
+const jobService = new JobService();
+
 // Get All Jobs
 const getAllJobs = catchAsync(async (req, res, next) => {
-  const jobs = await Jobs.find();
+  const jobs = await jobService.getAllJobs();
   if (!jobs) {
     return next(new AppError("Failed to get jobs listings", 404));
   }
@@ -20,19 +23,15 @@ const createJobPosting = catchAsync(async (req, res, next) => {
   const { title, description, requirements, applicationDeadline, salary } =
     req.body;
   const reference = req.user.id;
-  if (req.user.role !== "hospital") {
-    return next(
-      new AppError("You are not authorized to create a job posting!!!", 401)
-    );
-  }
-  const job = await Jobs.create({
+
+  const job = await jobService.createNewJob(
     reference,
     title,
     description,
     requirements,
     applicationDeadline,
-    salary,
-  });
+    salary
+  );
   if (!job) {
     return next(new AppError("Failed to create new job posting!", 404));
   }
@@ -46,7 +45,7 @@ const createJobPosting = catchAsync(async (req, res, next) => {
 const getSingleJobPosting = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const job = await Jobs.findById(id);
+  const job = await jobService.getSingleJob(id);
 
   if (!job) return next(new AppError("Jobw with specified id doesn't exist!"));
 
@@ -58,7 +57,7 @@ const getSingleJobPosting = catchAsync(async (req, res, next) => {
 
 // Get Job posted by currently logged in Hospital
 const getOwnJob = catchAsync(async (req, res, next) => {
-  const jobs = await Jobs.find({ reference: req.user._id });
+  const jobs = await jobService.getOwnJobs(req.params.id);
   if (!jobs) {
     return next(new AppError("Failed to get jobs listings", 404));
   }
@@ -71,15 +70,12 @@ const getOwnJob = catchAsync(async (req, res, next) => {
 
 // Update A Job Posting
 const updateJobPosting = catchAsync(async (req, res, next) => {
-  if (!req.body) {
+  if (!Object.keys(req.body).length) {
     return next(
       new AppError("Please provide a request body for fields to update", 400)
     );
   }
-  const job = await Jobs.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const job = await jobService.updateJobPosting(req.params.id, req.body);
 
   if (!job) {
     return next(new AppError("Failed to uodate job posting!", 404));
@@ -93,7 +89,7 @@ const updateJobPosting = catchAsync(async (req, res, next) => {
 
 // Delete Job Posting
 const deleteJobPosting = catchAsync(async (req, res, next) => {
-  const job = await Jobs.findByIdAndDelete(req.params.id);
+  const job = await jobService.deleteJobPosting(req.params.id);
 
   if (!job) {
     return next(
