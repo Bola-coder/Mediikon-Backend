@@ -21,4 +21,36 @@ const applyToJob = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { applyToJob };
+const getAllJobsApplicationForCurrentUser = catchAsync(
+  async (req, res, next) => {
+    const userID = req.user._id;
+    const application = await applicationServices.getAllJobsFromApplication(
+      userID
+    );
+    res.status(200).json({
+      status: "success",
+      application,
+    });
+  }
+);
+
+const getSingleJobApplication = catchAsync(async (req, res, next) => {
+  const userID = req.user._id;
+  const { jobID } = req.params;
+
+  const application = await applicationServices.getSingleJobApplication(
+    userID,
+    jobID
+  );
+
+  res.status(200).json({
+    status: "success",
+    application,
+  });
+});
+
+module.exports = {
+  applyToJob,
+  getAllJobsApplicationForCurrentUser,
+  getSingleJobApplication,
+};
