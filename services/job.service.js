@@ -1,6 +1,6 @@
 const Jobs = require("./../models/job");
 
-class JobService {
+class JobServices {
   getAllJobs = async () => {
     const jobs = await Jobs.find();
     if (!jobs) {
@@ -13,7 +13,9 @@ class JobService {
     reference,
     title,
     description,
-    requirements,
+    EducationalRequirements,
+    ExperienceRequirements,
+    location,
     applicationDeadline,
     salary
   ) => {
@@ -21,7 +23,9 @@ class JobService {
       reference,
       title,
       description,
-      requirements,
+      EducationalRequirements,
+      ExperienceRequirements,
+      location,
       applicationDeadline,
       salary,
     });
@@ -67,4 +71,4 @@ class JobService {
   };
 }
 
-module.exports = JobService;
+module.exports = JobServices;

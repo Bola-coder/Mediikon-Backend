@@ -5,16 +5,16 @@ const AuthServices = require("./../services/auth.service");
 const catchAsync = require("./../utils/CatchAsync");
 const AppError = require("./../utils/AppError");
 
-const authService = new AuthServices();
+const authServices = new AuthServices();
 
 // Signup fucntion for users
 const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, role } = req.body;
-  const user = await authService.signup(name, email, password, role);
+  const user = await authServices.signup(name, email, password, role);
   if (!user) {
     return next(new AppError("Failed to create new user", 400));
   }
-  const token = authService.signJWT(user._id, user.role);
+  const token = authServices.signJWT(user._id, user.role);
   res
     .cookie("access_token", token, {
       maxAge: 86400 * 1000, // 1 day in seconds. Defualt value is milliSeconds
@@ -35,12 +35,12 @@ const login = catchAsync(async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError("Please provide emaill and password", 400));
   }
-  const user = await authService.login(email, password);
+  const user = await authServices.login(email, password);
   if (user === null) {
     return next(new AppError("Invalid username or password", 401));
   }
 
-  const token = authService.signJWT(user.id, user.role);
+  const token = authServices.signJWT(user.id, user.role);
 
   res
     .cookie("access_token", token, {
