@@ -7,9 +7,17 @@ const applicationSchema = mongoose.Schema({
   },
   jobs: [
     {
+      hospitalID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
       job: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Jobs",
+      },
+      cv: {
+        type: String,
+        required: [true, "Please upload a cv for the job application"],
       },
       DateApplied: {
         type: Date,

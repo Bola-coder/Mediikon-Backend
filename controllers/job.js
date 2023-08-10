@@ -29,10 +29,10 @@ const createJobPosting = catchAsync(async (req, res, next) => {
     applicationDeadline,
     salary,
   } = req.body;
-  const reference = req.user.id;
+  const hospitalReference = req.user.id;
 
   const job = await jobServices.createNewJob(
-    reference,
+    hospitalReference,
     title,
     description,
     EducationalRequirements,
@@ -68,7 +68,7 @@ const getSingleJobPosting = catchAsync(async (req, res, next) => {
 const getOwnJob = catchAsync(async (req, res, next) => {
   const jobs = await jobServices.getOwnJobs(req.params.id);
   if (!jobs) {
-    return next(new AppError("Failed to get jobs listings", 404));
+    return next(new AppError("Failed to get your posted jobs listings", 404));
   }
   res.status(200).json({
     status: "success",

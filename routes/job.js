@@ -16,12 +16,12 @@ router
   .get(protectRoute, getAllJobs)
   .post(protectRoute, restrictTo("hospital"), createJobPosting);
 
-router.route("/self").get(protectRoute, restrictTo("hospital"), getOwnJob);
-
 router
   .route("/:id")
   .get(getSingleJobPosting)
   .patch(protectRoute, restrictTo("hospital"), updateJobPosting)
   .delete(protectRoute, restrictTo("hospital"), deleteJobPosting);
+
+router.route("/self/:id").get(protectRoute, restrictTo("hospital"), getOwnJob);
 
 module.exports = router;

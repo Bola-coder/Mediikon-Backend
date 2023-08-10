@@ -10,7 +10,7 @@ class JobServices {
   };
 
   createNewJob = async (
-    reference,
+    hospitalReference,
     title,
     description,
     EducationalRequirements,
@@ -20,7 +20,7 @@ class JobServices {
     salary
   ) => {
     const job = await Jobs.create({
-      reference,
+      hospitalReference,
       title,
       description,
       EducationalRequirements,
@@ -44,7 +44,8 @@ class JobServices {
   };
 
   getOwnJobs = async (id) => {
-    const jobs = await Jobs.find({ reference: id });
+    const jobs = await Jobs.find({ hospitalReference: id });
+    console.log(jobs);
     if (!jobs) {
       return null;
     }

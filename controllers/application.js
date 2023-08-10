@@ -6,12 +6,39 @@ const applicationServices = new ApplicationServices();
 
 const applyToJob = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
+  console.log(req.body);
+  console.log(req);
   const { jobID } = req.body;
+  const file = req.file;
+  let cvFilePath;
   if (!jobID) {
-    return next(new AppError("Please provide a job id in the request body!"));
+    return next(
+      new AppError("Please provide a job id in the request body!", 400)
+    );
   }
 
-  const application = await applicationServices.applyToJob(userID, jobID);
+  if (!file) {
+    return next(new AppError("Please provide your CV", 400));
+  }
+
+  // const upload = await applicationServices.uploadCVForApplication.upload(
+  //   req,
+  //   res,
+  //   function (err) {
+  //     if (err) {
+  //       return next(new AppError(`Failed  to uplaod cv": ${err}`, 404));
+  //     } else {
+  //       cvFilePath = req.file.path;
+  //     }
+  //   }
+  // );
+  cvFilePath = req.file.path;
+
+  const application = await applicationServices.applyToJob(
+    userID,
+    jobID,
+    cvFilePath
+  );
   if (!application) {
     return next(new AppError("Failed to create new application"));
   }
@@ -28,6 +55,7 @@ const getAllJobsApplicationForCurrentUser = catchAsync(
       userID
     );
     res.status(200).json({
+      applied: application.jobs.length,
       status: "success",
       application,
     });

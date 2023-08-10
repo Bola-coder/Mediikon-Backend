@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const jobSchema = mongoose.Schema({
-  reference: {
+  hospitalReference: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "Job posting should have a user reference"],
+    required: [true, "Job posting should have a user (hospital) reference"],
     ref: "User",
   },
   title: {
@@ -25,6 +25,9 @@ const jobSchema = mongoose.Schema({
   ExperienceRequirements: {
     type: [String],
     required: [true, "Job should have experience requirements"],
+  },
+  question: {
+    type: [String],
   },
   location: {
     type: String,
